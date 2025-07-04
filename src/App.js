@@ -1,8 +1,9 @@
-// src/App.js
 import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import MovieList from "./components/MovieList";
 import Filter from "./components/Filter";
 import AddMovieForm from "./components/AddMovieForm";
+import MovieDetails from "./components/MovieDetails";
 import "./App.css";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         posterURL:
           "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX1000_.jpg",
         rating: 8.8,
+        trailerLink: "https://www.youtube.com/embed/YoHD9XEInc0",
       },
       {
         id: 2,
@@ -32,6 +34,7 @@ function App() {
         posterURL:
           "https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NmNlLWJiNDMtZDViZWM2MzIxZDYwXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_.jpg",
         rating: 9.3,
+        trailerLink: "https://www.youtube.com/embed/6hB3S9bIaco",
       },
       {
         id: 3,
@@ -41,6 +44,7 @@ function App() {
         posterURL:
           "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg",
         rating: 9.0,
+        trailerLink: "https://www.youtube.com/embed/EXeTwQWrcwY",
       },
     ];
     setMovies(initialMovies);
@@ -69,31 +73,45 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>Movie Collection</h1>
-        <button
-          className="add-movie-btn"
-          onClick={() => setShowForm(!showForm)}
-        >
-          {showForm ? "Cancel" : "Add New Movie"}
-        </button>
-      </header>
+    <Router>
+      <div className="app">
+        <header className="app-header">
+          <Link to="/" className="app-title">
+            <h1>Movie Collection</h1>
+          </Link>
+          <button
+            className="add-movie-btn"
+            onClick={() => setShowForm(!showForm)}
+          >
+            {showForm ? "Cancel" : "Add New Movie"}
+          </button>
+        </header>
 
-      {showForm ? (
-        <AddMovieForm onAddMovie={addMovie} />
-      ) : (
-        <>
-          <Filter
-            titleFilter={titleFilter}
-            ratingFilter={ratingFilter}
-            onTitleChange={setTitleFilter}
-            onRatingChange={setRatingFilter}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                {showForm ? (
+                  <AddMovieForm onAddMovie={addMovie} />
+                ) : (
+                  <>
+                    <Filter
+                      titleFilter={titleFilter}
+                      ratingFilter={ratingFilter}
+                      onTitleChange={setTitleFilter}
+                      onRatingChange={setRatingFilter}
+                    />
+                    <MovieList movies={filteredMovies} />
+                  </>
+                )}
+              </>
+            }
           />
-          <MovieList movies={filteredMovies} />
-        </>
-      )}
-    </div>
+          <Route path="/movie/:id" element={<MovieDetails movies={movies} />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

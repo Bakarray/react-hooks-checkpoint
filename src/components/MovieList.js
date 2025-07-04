@@ -1,4 +1,3 @@
-// src/components/MovieList.js
 import React from "react";
 import MovieCard from "./MovieCard";
 
